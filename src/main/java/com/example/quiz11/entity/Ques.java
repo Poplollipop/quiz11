@@ -31,6 +31,10 @@ public class Ques {
     @Column(name = "options")
     private String options;
 
+    public void setQuesId(int quesId) {
+        this.quesId = quesId;
+    }
+
     public Ques() {
 
     }

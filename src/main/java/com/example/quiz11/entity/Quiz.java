@@ -13,10 +13,9 @@ import javax.persistence.Table;
 @Table(name = "quiz")
 public class Quiz {
 
-
     // 因為 PK 是 AI(Auto Incremental)，所以要加上此 @GeneratedValue
-	// strategy: 指的是 AI 的生成策略
-	// GenerationType.IDENTITY: 代表 PK 數字由資料庫來自動增加
+    // strategy: 指的是 AI 的生成策略
+    // GenerationType.IDENTITY: 代表 PK 數字由資料庫來自動增加
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -36,19 +35,27 @@ public class Quiz {
     private LocalDate endDate;
 
     @Column(name = "is_publish")
-    private boolean isPublish;
+    private boolean published;
 
     public Quiz() {
 
     }
 
-    public Quiz(int id, String name, String description, LocalDate startDate, LocalDate endDate, boolean isPublish) {
+    public Quiz(int id, String name, String description, LocalDate startDate, LocalDate endDate, boolean published) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.isPublish = isPublish;
+        this.published = published;
+    }
+
+    public Quiz(String name, String description, LocalDate startDate, LocalDate endDate, boolean published) {
+        this.name = name;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.published = published;
     }
 
     public int getId() {
@@ -71,8 +78,8 @@ public class Quiz {
         return endDate;
     }
 
-    public boolean isPublish() {
-        return isPublish;
+    public boolean isPublished() {
+        return published;
     }
 
 }

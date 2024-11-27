@@ -72,4 +72,26 @@ public class Ques {
         return options;
     }
 
+    public void setQuizId(int quizId) {
+        this.quizId = quizId;
+    }
+
+    public void setQuesName(String quesName) {
+        this.quesName = quesName;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
+    public void setOptions(String options) {
+        this.options = options;
+    }
+
+    
+
 }

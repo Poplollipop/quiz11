@@ -7,7 +7,9 @@ public enum ResMessage {
     QUIZ_PARAM_ERROR(400,"Quiz Param Error!!!"),//
     QUES_PARAM_ERROR(400,"Ques Param Error!!!"),//
     QUES_TYPE_ERROR(400,"Ques Type Error!!!"),//
-    DATE_ERROR(400,"Date Error!!!");
+    DATE_ERROR(400,"Date Error!!!"),
+    QUIZ_NOT_FOUND(404,"Quiz Not Found!!!"),
+    QUES_NOT_FOUND(400,"Ques Not Found!!!");
 
     private int code;
     private String message;

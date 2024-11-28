@@ -49,7 +49,7 @@ public class QuizServiceImpl implements QuizService {
         // 將 quiz 中的 id 加入到 Ques
         int quizId = quizRes.getId();
         for (Ques item : req.getQuesList()) {
-            item.setQuesId(quizId);
+            item.setQuizId(quizId);
         }
         // 新增問題
         quesDao.saveAll(req.getQuesList());

@@ -84,7 +84,7 @@ public class QuizServiceImpl implements QuizService {
                 return new BasicRes(ResMessage.QUES_PARAM_ERROR.getCode(), ResMessage.QUES_PARAM_ERROR.getMessage());
             }
             // 檢查題目類型： 單選(single)、多選(multi)、文字(text)
-            if (QuesType.checkType(item.getType())) {
+            if (!QuesType.checkType(item.getType())) {
                 return new BasicRes(ResMessage.QUES_TYPE_ERROR.getCode(), ResMessage.QUES_TYPE_ERROR.getMessage());
             }
             // 檢查非文字類型，選項沒有值

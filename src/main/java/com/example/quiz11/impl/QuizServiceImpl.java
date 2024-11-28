@@ -1,8 +1,12 @@
 package com.example.quiz11.impl;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import com.example.quiz11.constants.QuesType;
@@ -14,7 +18,11 @@ import com.example.quiz11.entity.Quiz;
 import com.example.quiz11.service.QuizService;
 import com.example.quiz11.vo.BasicRes;
 import com.example.quiz11.vo.CreateUpdateReq;
+import com.example.quiz11.vo.DeleteReq;
+import com.example.quiz11.vo.SearchReq;
+import com.example.quiz11.vo.SearchRes;
 
+@Service
 public class QuizServiceImpl implements QuizService {
 
     @Autowired
@@ -23,6 +31,7 @@ public class QuizServiceImpl implements QuizService {
     @Autowired
     private QuesDao quesDao;
 
+    @Transactional
     @Override
     public BasicRes create(CreateUpdateReq req) {
         // 參數檢查
@@ -88,44 +97,110 @@ public class QuizServiceImpl implements QuizService {
     }
 
     // 編輯問卷
+    @Transactional
     @Override
     public BasicRes update(CreateUpdateReq req) {
         BasicRes checkResult = checkParams(req, true);
         if (checkResult != null) {
             return checkResult;
         }
-
-        Quiz quizExist = quizDao.getById(req.getId());
-        if (quizExist == null) {
-            return new BasicRes(ResMessage.QUIZ_NOT_FOUND.getCode(), ResMessage.QUIZ_NOT_FOUND.getMessage());
-        }
-        // 更新問卷訊息
-        quizExist.setName(req.getName());
-        quizExist.setDescription(req.getDescription());
-        quizExist.setStartDate(req.getStartDate());
-        quizExist.setEndDate(req.getEndDate());
-        quizExist.setPublished(req.isPublished());
-        quizDao.save(quizExist);
-        // 更新問題
+        // 檢查 Ques 的 quiz_id 是否與 Quiz 的 id相符
+        int quizId = req.getId();
         for (Ques item : req.getQuesList()) {
-            if (item.getQuesId() > 0) {
-                // 更新現有問題
-                Ques existQues = quesDao.getById(item.getQuesId());
-                if (existQues != null) {
-                    existQues.setQuesName(item.getQuesName());
-                    existQues.setType(item.getType());
-                    existQues.setOptions(item.getOptions());
-                    quesDao.save(existQues);
-                } else {
-                    return new BasicRes(ResMessage.QUES_NOT_FOUND.getCode(), ResMessage.QUES_NOT_FOUND.getMessage());
-                }
-            } else {
-                // 新增新問題
-                item.setQuizId(req.getId());
-                quesDao.save(item);
+            if (item.getQuizId() != quizId) {
+                return new BasicRes(ResMessage.QUIZID_MISMATCH.getCode(), ResMessage.QUIZID_MISMATCH.getMessage());
             }
         }
-    
+        // 問卷可以更新的狀態: 1. 未發布 2. 已發佈但尚未開始
+        Optional<Quiz> op = quizDao.findById(quizId);
+
+        // 確認問卷是否存在
+        // if (op.isEmpty()) {
+        // return new BasicRes(ResMessage.QUIZ_NOT_FOUND.getCode(),
+        // ResMessage.QUIZ_NOT_FOUND.getMessage());
+        // }
+        // // 取得問卷(資料庫中的資料)
+        Quiz quiz = op.get();
+        // // 確認問卷是否可以進行更新
+        // // 尚未發布: quiz.isPublished()
+        // // 已發佈但尚未開始: quiz.isPublished() &&
+        // req.getStartDate().isAfter(LocalDate.now())
+        // // 小括號分組用
+        // // 排除法: 所以整個邏輯前面加入 ! 表示反相
+        if (!(!quiz.isPublished() || (quiz.isPublished() && req.getStartDate().isAfter(LocalDate.now())))) {
+            return new BasicRes(ResMessage.QUIZ_UPDATE_FAILED.getCode(), ResMessage.QUIZ_UPDATE_FAILED.getMessage());
+        }
+
+        // 從資料庫中透過ID取得 Quiz 物件
+        Quiz quizExist = quizDao.getById(req.getId());
+
+        // 如果未找到對應的 Quiz
+        if (quizExist == null) {
+            // 回傳包含錯誤代碼和訊息的回應，表示未找到 Quiz
+            return new BasicRes(ResMessage.QUIZ_NOT_FOUND.getCode(), ResMessage.QUIZ_NOT_FOUND.getMessage());
+        }
+
+        // // 將 req 中的值 set 回從資料庫取出的 quiz 中
+        // quiz.setName(req.getName());
+        // quiz.setDescription(req.getDescription());
+        // quiz.setStartDate(req.getStartDate());
+        // quiz.setEndDate(req.getEndDate());
+        // quiz.setPublished(req.isPublished());
+        // // 更新問卷
+        // quizDao.save(quiz);
+        // // 先刪除相同 quiz_id 的問卷所有問題，再新增
+        // quesDao.deleteByQuizId(quizId);
+        // quesDao.saveAll(req.getQuesList());
+        // return new BasicRes(ResMessage.SUCCESS.getCode(),
+        // ResMessage.SUCCESS.getMessage());
+        // 更新問卷訊息
+        quiz.setName(req.getName());
+        quiz.setDescription(req.getDescription());
+        quiz.setStartDate(req.getStartDate());
+        quiz.setEndDate(req.getEndDate());
+        quiz.setPublished(req.isPublished());
+        quizDao.save(quiz);
+
+        // 刪除現有問題
+        quesDao.deleteByQuizId(quizId);
+        // 更新問題
+        for (Ques item : req.getQuesList()) {
+            item.setQuizId(quizId);
+            quesDao.save(item);
+        }
+
         return new BasicRes(ResMessage.SUCCESS.getCode(), ResMessage.SUCCESS.getMessage());
     }
+
+    @Override
+    public BasicRes delete(DeleteReq req) {
+        // 刪問卷
+        quizDao.deleteByIdIn(req.getQuizIdList());
+        // 刪相同 quiz_id問卷的所有問題
+        quesDao.deleteByQuizIdIn(req.getQuizIdList());
+        return new BasicRes(ResMessage.SUCCESS.getCode(), ResMessage.SUCCESS.getMessage());
+    }
+
+    @Override
+    public SearchRes serach(SearchReq req) {
+        // 檢視條件
+        String name = req.getName();
+        LocalDate starDate = req.getStarDate();
+        LocalDate endDate = req.getEndDate();
+        // 若 name = null 或空(白)字串，一律轉成空字串
+        if (!StringUtils.hasText(name)) {
+            name = "";
+        }
+        // 若沒有開始日期條件，將日期預設為1970年1月1日
+        if (starDate == null) {
+            starDate = LocalDate.of(1970, 1, 1);
+        }
+        // 若沒有結束日期條件，將日期預設為9999年12月31日
+        if (endDate == null) {
+            endDate = LocalDate.of(9999, 12, 31);
+        }
+        List<Quiz> quizList = quizDao.getByConditions(name, starDate, endDate);
+        return new SearchRes(ResMessage.SUCCESS.getCode(), ResMessage.SUCCESS.getMessage(), quizList);
+    }
+
 }

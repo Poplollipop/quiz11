@@ -28,18 +28,21 @@ public class Quiz {
     @Column(name = "description")
     private String description;
 
+    // @JsonProperty("start_date") // 可以更改變數名稱Mapping
     @Column(name = "start_date")
-    private LocalDate startDate;
+    private LocalDate startDate = LocalDate.now(); // 給定預設值
 
+    // @JsonProperty("end_date") // 可以更改變數名稱Mapping
     @Column(name = "end_date")
-    private LocalDate endDate;
+    private LocalDate endDate = LocalDate.now(); // 給定預設值
 
-    @Column(name = "is_publish")
+    @Column(name = "published")
     private boolean published;
 
     public Quiz() {
 
     }
+
 
     public Quiz(int id, String name, String description, LocalDate startDate, LocalDate endDate, boolean published) {
         this.id = id;

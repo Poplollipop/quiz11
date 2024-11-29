@@ -9,7 +9,6 @@ import com.example.quiz11.entity.User;
 
 @Repository
 public interface UserDao extends JpaRepository<User, Integer> {
-    // Optional<User> findByUserNameAndPassword(String userName, String password);
 
     Optional<User> findByEmail(String email);
 

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.quiz11.service.UserService;
 import com.example.quiz11.vo.BasicRes;
+import com.example.quiz11.vo.LoginReq;
 import com.example.quiz11.vo.UserReq;
 
 @RestController
@@ -24,5 +25,9 @@ public class UserServiceController {
         return userService.addAccount(req);
     }
 
+    @PostMapping(path="/login")
+    public BasicRes login(@RequestBody LoginReq req){
+        return userService.login(req);
+    }
 
 }

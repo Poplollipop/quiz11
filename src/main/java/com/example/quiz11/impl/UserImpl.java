@@ -13,6 +13,7 @@ import com.example.quiz11.dao.UserDao;
 import com.example.quiz11.entity.User;
 import com.example.quiz11.service.UserService;
 import com.example.quiz11.vo.BasicRes;
+import com.example.quiz11.vo.LoginReq;
 import com.example.quiz11.vo.UserReq;
 
 @Service
@@ -20,6 +21,9 @@ public class UserImpl implements UserService {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    BCryptPasswordEncoder encoder;
 
     @Transactional
     @Override
@@ -34,11 +38,12 @@ public class UserImpl implements UserService {
                 req.getUserPermit(),
                 req.getUserName(),
                 req.getEmail(),
-                encoder.encode(req.getPassword()));
-       
-            userDao.save(user);
-            return new BasicRes(ResMessage.SUCCESS.getCode(), ResMessage.SUCCESS.getMessage());
-       
+                encoder.encode(req.getPassword())
+                );
+
+        userDao.save(user);
+        return new BasicRes(ResMessage.SUCCESS.getCode(), ResMessage.SUCCESS.getMessage());
+
     }
 
     private BasicRes checkParams(UserReq req) {
@@ -56,9 +61,25 @@ public class UserImpl implements UserService {
         Optional<User> opEmail = userDao.findByEmail(req.getEmail());
 
         if (opEmail.isPresent()) {
-            return new BasicRes(ResMessage.EMAIL_ALREADY_EXISTS.getCode(), ResMessage.EMAIL_ALREADY_EXISTS.getMessage());
+            return new BasicRes(ResMessage.EMAIL_ALREADY_EXISTS.getCode(),
+                    ResMessage.EMAIL_ALREADY_EXISTS.getMessage());
         }
         return null;
+    }
+
+    @Override
+    public BasicRes login(LoginReq req) {
+        if(!StringUtils.hasText(req.getUserName()) || !StringUtils.hasText(req.getPassword())) {
+            return new BasicRes(ResMessage.ACCOUNT_PARAM_ERROR.getCode(), ResMessage.ACCOUNT_PARAM_ERROR.getMessage());
+        }
+        Optional<User> user = userDao.findByUserName(req.getUserName());
+        if (!user.isPresent()) {
+            return new BasicRes(ResMessage.USER_NOT_FOUND.getCode(), ResMessage.USER_NOT_FOUND.getMessage());
+        }
+        if (!encoder.matches(req.getPassword(), user.get().getPassword())){
+            return new BasicRes(ResMessage.PASSWORD_INCORRECT.getCode(), ResMessage.PASSWORD_INCORRECT.getMessage());
+        }
+        return new BasicRes(ResMessage.SUCCESS.getCode(), ResMessage.SUCCESS.getMessage());
     }
 
 }

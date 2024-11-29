@@ -15,7 +15,9 @@ public enum ResMessage {
     ACCOUNT_PARAM_ERROR(400,"Account Param Error!!!"),//
     ACCOUNT_ALREADY_EXIST(400,"Account Alreay Exisit!!!"),//
     ACCOUNT_SAVE_FAILED(400,"Account Save Failed!!!"),//
-    EMAIL_ALREADY_EXISTS(400,"Email Already Exists!!!");
+    EMAIL_ALREADY_EXISTS(400,"Email Already Exists!!!"),//
+    USER_NOT_FOUND(404,"User Not Found!!!"),//
+    PASSWORD_INCORRECT(400,"Password Incorrect!!!");
 
     private int code;
     private String message;

@@ -1,6 +1,7 @@
 package com.example.quiz11.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import com.example.quiz11.vo.DeleteReq;
 import com.example.quiz11.vo.SearchReq;
 import com.example.quiz11.vo.SearchRes;
 
+@CrossOrigin(value="http://localhost:4200/")
 @RestController
 @RequestMapping(path = "quiz")
 public class QuizServiceController {

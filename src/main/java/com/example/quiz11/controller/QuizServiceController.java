@@ -18,7 +18,7 @@ import com.example.quiz11.vo.SearchRes;
 @RestController
 
 @RequestMapping(path = "quiz")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "*")
 public class QuizServiceController {
 
     @Autowired

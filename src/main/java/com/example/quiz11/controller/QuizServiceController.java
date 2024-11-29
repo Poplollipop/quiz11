@@ -14,9 +14,11 @@ import com.example.quiz11.vo.DeleteReq;
 import com.example.quiz11.vo.SearchReq;
 import com.example.quiz11.vo.SearchRes;
 
-@CrossOrigin(value="http://localhost:4200/")
+
 @RestController
+
 @RequestMapping(path = "quiz")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class QuizServiceController {
 
     @Autowired
@@ -37,7 +39,7 @@ public class QuizServiceController {
         return quizService.delete(req);
     }
 
-    @PostMapping(path = "/serach")
+    @PostMapping(path = "/search")
     public SearchRes serach(SearchReq req) {
         return quizService.serach(req);
     }

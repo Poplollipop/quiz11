@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name = "quiz")
 public class Quiz {
@@ -29,10 +31,12 @@ public class Quiz {
     private String description;
 
     // @JsonProperty("start_date") // 可以更改變數名稱Mapping
+    @JsonFormat(pattern = "yyyy-MM-dd") // 確保 JSON 序列化時使用的格式
     @Column(name = "start_date")
     private LocalDate startDate = LocalDate.now(); // 給定預設值
 
     // @JsonProperty("end_date") // 可以更改變數名稱Mapping
+    @JsonFormat(pattern = "yyyy-MM-dd") // 確保 JSON 序列化時使用的格式
     @Column(name = "end_date")
     private LocalDate endDate = LocalDate.now(); // 給定預設值
 

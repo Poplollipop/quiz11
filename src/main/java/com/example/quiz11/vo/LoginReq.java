@@ -11,7 +11,7 @@ public class LoginReq {
     }
 
     public LoginReq(String userName, String password) {
-        userName = userName;
+        this.userName = userName;
         this.password = password;
     }
 

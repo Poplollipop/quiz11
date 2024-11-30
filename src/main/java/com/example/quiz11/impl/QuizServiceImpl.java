@@ -203,4 +203,9 @@ public class QuizServiceImpl implements QuizService {
         return new SearchRes(ResMessage.SUCCESS.getCode(), ResMessage.SUCCESS.getMessage(), quizList);
     }
 
+    @Override
+    public List<Quiz> findAllSurveys() {
+        return quizDao.findAll(); // 從資料庫取得所有問卷
+    }
+
 }

@@ -27,4 +27,5 @@ public interface QuizDao extends JpaRepository<Quiz, Integer> {
     @Query(value = "select id, name, description, start_date, end_date, published from quiz where name like %?1% " //
             + " and start_date >= ?2 and end_date <= ?3", nativeQuery = true)
     public List<Quiz> getByConditions(String name, LocalDate starDate, LocalDate endDate);
+
 }

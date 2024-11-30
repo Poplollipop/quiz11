@@ -22,7 +22,7 @@ import com.example.quiz11.vo.SurveyRes;
 @RestController
 
 @RequestMapping(path = "quiz")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "*")
 public class QuizServiceController {
 
     @Autowired

@@ -37,6 +37,7 @@ public class QuizServiceController {
 
     @PostMapping(path = "/update")
     public BasicRes update(@RequestBody CreateUpdateReq req) {
+        System.out.println("update:" + req.getId());
         return quizService.update(req);
     }
 

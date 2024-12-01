@@ -3,6 +3,8 @@ package com.example.quiz11.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,14 +40,16 @@ public class QuizServiceController {
         return quizService.update(req);
     }
 
+    @Transactional
+    @Modifying
     @PostMapping(path = "/delete")
-    public BasicRes delete(DeleteReq req) {
+    public BasicRes delete(@RequestBody DeleteReq req) {
         return quizService.delete(req);
     }
 
     @PostMapping(path = "/search")
-    public SearchRes serach(SearchReq req) {
-        return quizService.serach(req);
+    public SearchRes serach(@RequestBody SearchReq req) {
+        return quizService.search(req);
     }
 
     @GetMapping

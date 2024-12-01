@@ -182,10 +182,10 @@ public class QuizServiceImpl implements QuizService {
     }
 
     @Override
-    public SearchRes serach(SearchReq req) {
+    public SearchRes search(SearchReq req) {
         // 檢視條件
         String name = req.getName();
-        LocalDate starDate = req.getStarDate();
+        LocalDate starDate = req.getStartDate();
         LocalDate endDate = req.getEndDate();
         // 若 name = null 或空(白)字串，一律轉成空字串
         if (!StringUtils.hasText(name)) {

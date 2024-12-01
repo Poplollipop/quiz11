@@ -18,4 +18,9 @@ public class DeleteReq {
         return quizIdList;
     }
     
+
+    public void setQuizIdList(List<Integer> quizIdList) {
+        this.quizIdList = quizIdList;
+    }
+
 }

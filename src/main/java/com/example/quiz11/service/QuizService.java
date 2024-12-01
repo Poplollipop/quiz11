@@ -17,7 +17,7 @@ public interface QuizService {
 
     public BasicRes delete(DeleteReq req);
 
-    public SearchRes serach(SearchReq req);
+    public SearchRes search(SearchReq req);
 
     public List<Quiz> findAllSurveys();
 

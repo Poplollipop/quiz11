@@ -6,7 +6,7 @@ public class SearchReq {
 
     private String name;
 
-    private LocalDate starDate;
+    private LocalDate startDate;
 
     private LocalDate endDate;
 
@@ -14,9 +14,9 @@ public class SearchReq {
 
     }
 
-    public SearchReq(String name, LocalDate starDate, LocalDate endDate) {
+    public SearchReq(String name, LocalDate startDate, LocalDate endDate) {
         this.name = name;
-        this.starDate = starDate;
+        this.startDate = startDate;
         this.endDate = endDate;
     }
 
@@ -24,8 +24,8 @@ public class SearchReq {
         return name;
     }
 
-    public LocalDate getStarDate() {
-        return starDate;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
     public LocalDate getEndDate() {

@@ -27,6 +27,7 @@ import com.example.quiz11.vo.SearchRes;
 @Service
 public class QuizServiceImpl implements QuizService {
 
+
     @Autowired
     private QuizDao quizDao;
 
@@ -134,7 +135,7 @@ public class QuizServiceImpl implements QuizService {
         }
 
         // 從資料庫中透過ID取得 Quiz 物件
-        Quiz quizExist = quizDao.getById(req.getId());
+        Quiz quizExist = quizDao.getById1(req.getId());
 
         // 如果未找到對應的 Quiz
         if (quizExist == null) {
@@ -240,10 +241,27 @@ public class QuizServiceImpl implements QuizService {
         }
         // 比對問題
         List<Ques> quesList = quesDao.getByQuizId(req.getQuizId());
-        if(CollectionUtils.isEmpty(quesList)){
+        if (CollectionUtils.isEmpty(quesList)) {
             return new BasicRes(ResMessage.QUES_NOT_FOUND.getCode(), ResMessage.QUES_NOT_FOUND.getMessage());
         }
         return null;
     }
 
+    @Override
+    public Optional<Quiz> getQuizById(int quizId) {
+        Optional<Quiz> op = quizDao.getById(quizId);
+        if(op.isEmpty()){
+            return Optional.empty();
+        }
+        return quizDao.findById(quizId);
+}
+
+    @Override
+    public BasicRes getQuestionsByQuizId(int quizId) {
+        List<Ques> questions = quesDao.getByQuizId(quizId);  // 根據 quizId 查詢問題
+        if(CollectionUtils.isEmpty(questions)){
+            return new BasicRes(ResMessage.QUES_NOT_FOUND.getCode(), ResMessage.QUES_NOT_FOUND.getMessage());
+        }
+        return new SearchRes(ResMessage.SUCCESS.getCode(), ResMessage.SUCCESS.getMessage());
+    }
 }

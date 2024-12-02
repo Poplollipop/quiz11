@@ -28,4 +28,15 @@ public interface QuizDao extends JpaRepository<Quiz, Integer> {
             + " and start_date >= ?2 and end_date <= ?3", nativeQuery = true)
     public List<Quiz> getByConditions(String name, LocalDate starDate, LocalDate endDate);
 
+    // JPA 語法
+    // public Quiz findByIdAndPublishedTrue(int quizId);
+
+    //上下行同義
+    // SQL 語法 published = true 可以 published is true; null 也適用
+    @Query(value = "select id, name, description, start_date, end_date, published from quiz where id = ?1 and published = true", nativeQuery = true)
+    public Quiz getByIdAndPublishedTrue(int quizId);
+
+    // 新增填寫時間必須在開始時間及結束時間範圍內
+    // @Query(value = "select id, name, description, start_date, end_date, published from quiz where id = ?1 and published = true and start_date <= ?2 and end_date >= ?3", nativeQuery = true)
+    // public Quiz getByIdAndPublishedTrueBetween(int quizId, LocalDate fillinDate);
 }

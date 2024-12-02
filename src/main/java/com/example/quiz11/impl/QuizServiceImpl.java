@@ -213,23 +213,36 @@ public class QuizServiceImpl implements QuizService {
     @Override
     public BasicRes fillin(FillinReq req) {
         // 參數檢查
-        if(req.getQuizId() <= 0){
-            return new BasicRes(ResMessage.QUIZ_ID_ERROR.getCode(),ResMessage.QUIZ_ID_ERROR.getMessage()); 
+        if (req.getQuizId() <= 0) {
+            return new BasicRes(ResMessage.QUIZ_ID_ERROR.getCode(), ResMessage.QUIZ_ID_ERROR.getMessage());
         }
-        if(!StringUtils.hasText(req.getUserName()) || !StringUtils.hasText(req.getEmail())){
-            return new BasicRes(ResMessage.USERNAME_AND_EMAIL_REQUIRED.getCode(), ResMessage.USERNAME_AND_EMAIL_REQUIRED.getMessage());
+        if (!StringUtils.hasText(req.getUserName()) || !StringUtils.hasText(req.getEmail())) {
+            return new BasicRes(ResMessage.USERNAME_AND_EMAIL_REQUIRED.getCode(),
+                    ResMessage.USERNAME_AND_EMAIL_REQUIRED.getMessage());
         }
-        if(req.getAge() < 12){
+        if (req.getAge() < 12) {
             return new BasicRes(ResMessage.AGE_ABOVE_12.getCode(), ResMessage.AGE_ABOVE_12.getMessage());
         }
-        if(CollectionUtils.isEmpty(req.getAnswer())){
+        if (CollectionUtils.isEmpty(req.getAnswer())) {
             return new BasicRes(ResMessage.ANSWER_REQUIRED.getCode(), ResMessage.ANSWER_REQUIRED.getMessage());
         }
 
         // 需要檢查填寫日期是否是問間可填寫的時間範圍內，要比對存在資料庫中的資料
-        
         // 比對資料庫的問卷和問題
-
+        // 可以填寫問卷必須是已發布的
+        Quiz quiz = quizDao.getByIdAndPublishedTrue(req.getQuizId());
+        if (quiz == null) {
+            return new BasicRes(ResMessage.QUIZ_NOT_FOUND.getCode(), ResMessage.QUIZ_NOT_FOUND.getMessage());
+        }
+        if (req.getFillinDate() == null || req.getFillinDate().isBefore(quiz.getStartDate())
+                || req.getFillinDate().isAfter(quiz.getEndDate())) {
+            return new BasicRes(ResMessage.DATE_RANGE_ERROR.getCode(), ResMessage.DATE_RANGE_ERROR.getMessage());
+        }
+        // 比對問題
+        List<Ques> quesList = quesDao.getByQuizId(req.getQuizId());
+        if(CollectionUtils.isEmpty(quesList)){
+            return new BasicRes(ResMessage.QUES_NOT_FOUND.getCode(), ResMessage.QUES_NOT_FOUND.getMessage());
+        }
         return null;
     }
 

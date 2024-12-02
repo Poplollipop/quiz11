@@ -21,7 +21,8 @@ public enum ResMessage {
     QUIZ_ID_ERROR(400,"Quiz Id Error!!!"),//
     USERNAME_AND_EMAIL_REQUIRED(400,"Username And Email Required!!!"),//
     AGE_ABOVE_12(400,"Age Above 12!!!"),//
-    ANSWER_REQUIRED(400,"Answer Required!!!");
+    ANSWER_REQUIRED(400,"Answer Required!!!"),//
+    DATE_RANGE_ERROR(400,"Date Range Error!!!");
 
     private int code;
     private String message;

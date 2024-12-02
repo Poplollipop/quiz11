@@ -17,7 +17,11 @@ public enum ResMessage {
     ACCOUNT_SAVE_FAILED(400,"Account Save Failed!!!"),//
     EMAIL_ALREADY_EXISTS(400,"Email Already Exists!!!"),//
     USER_NOT_FOUND(404,"User Not Found!!!"),//
-    PASSWORD_INCORRECT(400,"Password Incorrect!!!");
+    PASSWORD_INCORRECT(400,"Password Incorrect!!!"),//
+    QUIZ_ID_ERROR(400,"Quiz Id Error!!!"),//
+    USERNAME_AND_EMAIL_REQUIRED(400,"Username And Email Required!!!"),//
+    AGE_ABOVE_12(400,"Age Above 12!!!"),//
+    ANSWER_REQUIRED(400,"Answer Required!!!");
 
     private int code;
     private String message;

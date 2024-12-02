@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import com.example.quiz11.constants.QuesType;
@@ -19,6 +20,7 @@ import com.example.quiz11.service.QuizService;
 import com.example.quiz11.vo.BasicRes;
 import com.example.quiz11.vo.CreateUpdateReq;
 import com.example.quiz11.vo.DeleteReq;
+import com.example.quiz11.vo.FillinReq;
 import com.example.quiz11.vo.SearchReq;
 import com.example.quiz11.vo.SearchRes;
 
@@ -206,6 +208,29 @@ public class QuizServiceImpl implements QuizService {
     @Override
     public List<Quiz> findAllSurveys() {
         return quizDao.findAll(); // 從資料庫取得所有問卷
+    }
+
+    @Override
+    public BasicRes fillin(FillinReq req) {
+        // 參數檢查
+        if(req.getQuizId() <= 0){
+            return new BasicRes(ResMessage.QUIZ_ID_ERROR.getCode(),ResMessage.QUIZ_ID_ERROR.getMessage()); 
+        }
+        if(!StringUtils.hasText(req.getUserName()) || !StringUtils.hasText(req.getEmail())){
+            return new BasicRes(ResMessage.USERNAME_AND_EMAIL_REQUIRED.getCode(), ResMessage.USERNAME_AND_EMAIL_REQUIRED.getMessage());
+        }
+        if(req.getAge() < 12){
+            return new BasicRes(ResMessage.AGE_ABOVE_12.getCode(), ResMessage.AGE_ABOVE_12.getMessage());
+        }
+        if(CollectionUtils.isEmpty(req.getAnswer())){
+            return new BasicRes(ResMessage.ANSWER_REQUIRED.getCode(), ResMessage.ANSWER_REQUIRED.getMessage());
+        }
+
+        // 需要檢查填寫日期是否是問間可填寫的時間範圍內，要比對存在資料庫中的資料
+        
+        // 比對資料庫的問卷和問題
+
+        return null;
     }
 
 }

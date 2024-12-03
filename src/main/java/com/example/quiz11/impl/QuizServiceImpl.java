@@ -1,6 +1,7 @@
 package com.example.quiz11.impl;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +27,6 @@ import com.example.quiz11.vo.SearchRes;
 
 @Service
 public class QuizServiceImpl implements QuizService {
-
 
     @Autowired
     private QuizDao quizDao;
@@ -250,18 +250,18 @@ public class QuizServiceImpl implements QuizService {
     @Override
     public Optional<Quiz> getQuizById(int quizId) {
         Optional<Quiz> op = quizDao.getById(quizId);
-        if(op.isEmpty()){
+        if (op.isEmpty()) {
             return Optional.empty();
         }
         return quizDao.findById(quizId);
-}
+    }
 
     @Override
-    public BasicRes getQuestionsByQuizId(int quizId) {
-        List<Ques> questions = quesDao.getByQuizId(quizId);  // 根據 quizId 查詢問題
-        if(CollectionUtils.isEmpty(questions)){
-            return new BasicRes(ResMessage.QUES_NOT_FOUND.getCode(), ResMessage.QUES_NOT_FOUND.getMessage());
+    public List<Ques> getQuestionsByQuizId(int quizId) {
+        List<Ques> questions = quesDao.getByQuizId(quizId); // 查詢所有問題
+        if (questions.isEmpty()) {
+            return Collections.emptyList(); // 如果沒有問題，返回空列表
         }
-        return new SearchRes(ResMessage.SUCCESS.getCode(), ResMessage.SUCCESS.getMessage());
+        return questions;
     }
 }

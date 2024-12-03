@@ -15,8 +15,8 @@ import com.example.quiz11.entity.Ques;
 @Repository
 public interface QuesDao extends JpaRepository<Ques, String> {
 
-    @Query(value = "select q FROM ques q where q.id = :quesId", nativeQuery = true)
-    Ques getById(@Param("quesId") int quesId);
+    @Query(value = "select q FROM ques q where q.quiz_id = ?1", nativeQuery = true)
+    List<Ques> getById(@Param("quiz_id") int quesId);
 
     @Transactional
     @Modifying

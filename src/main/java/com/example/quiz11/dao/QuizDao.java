@@ -17,7 +17,7 @@ import com.example.quiz11.entity.Quiz;
 @Repository
 public interface QuizDao extends JpaRepository<Quiz, Integer> {
 
-    @Query(value = "select q from quiz q where q.id = :id", nativeQuery = true)
+    @Query(value = "select id, name, description, start_date, end_date, published from quiz q where q.id = ?1", nativeQuery = true)
     Optional<Quiz> getById(@Param("id") int quizId);
 
     @Query(value = "select q from quiz q where q.id = :id", nativeQuery = true)

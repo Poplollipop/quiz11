@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.quiz11.entity.Ques;
 import com.example.quiz11.entity.Quiz;
 import com.example.quiz11.service.QuizService;
 import com.example.quiz11.vo.BasicRes;
@@ -62,7 +63,7 @@ public class QuizServiceController {
         return new SurveyRes<>(200, "Success", surveys);
     }
 
-     // 獲取問卷的基本資料
+    // 獲取問卷的基本資料
     @GetMapping(path = "/{quizId}")
     public Optional<Quiz> getQuiz(@PathVariable int quizId) {
         return quizService.getQuizById(quizId);
@@ -70,7 +71,7 @@ public class QuizServiceController {
 
     // 獲取問卷的問題及選項
     @GetMapping(path = "/{quizId}/questions")
-    public BasicRes getQuestions(@PathVariable int quizId) {
+    public List<Ques> getQuestions(@PathVariable int quizId) {
         return quizService.getQuestionsByQuizId(quizId);
     }
 }
